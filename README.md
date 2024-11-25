@@ -6,9 +6,23 @@ It suffers from convoy effect.
 
 Convoy effect :- 
 Convoy Effect is a situation where many processes, who need to use a resource for a short time, are blocked by one process holding that resource for a long time. This cause poor resource management.
+
+ALGORITHM (handwritten):-
+a - Input the processes along with their burst time (BT).
+b - Find waiting time (WT) for all processes.
+c - As first process that comes need not to wait so
+waiting time for process 1 will be 0 i.e.WT[0] = 0.
+d - Find waiting time for all other processes i.e. for
+process i ->
+WT[i] =BT[i-1] +WT[i-1] .
+e - Find turnaround time = waiting_time + burst_time
+for all processes.
+f - Find average waiting time =
+total_waiting_time / no_of_processes.
+g - Similarly, find average turnaround time =
+total_turn_around_time / no_of_processes.
 CODE:-
 #include <stdio.h>
-
 int main()
 {
     int n;
@@ -68,6 +82,24 @@ THEORY:-
 Shortest Job First (SJF) is a non-preemptive or preemptive CPU scheduling algorithm that selects the process with the smallest burst time to execute next. It aims to minimise the average waiting time and is optimal in that regard.
 If two processes have the same burst time, then FCFS is used to break the tie. It is easy to implement in Batch systems where required CPU time is known in advance.
 Pre-emptive mode of Shortest Job First is called as Shortest Remaining Time First (SRTF).
+
+PSEUDOCODE (HANDWRITTEN):-
+a. Input the number of processes, arrival times, and burst times.
+b. Initialize:
+current_time = 0
+completion = 0
+Set remaining_time = burst_time for each process
+c. While (completion < total number of processes):
+d. Select the process with the shortest burst time among those that have
+arrived.
+e. Execute the process completely.
+f. Update its completion time and mark it as completed.
+g. Increase current_time based on the burst time of the selected process.
+h. Calculate Waiting Time and Turnaround Time:
+Waiting Time = Turnaround Time - Burst Time
+Turnaround Time = Completion Time - Arrival Time
+i. Output the completion time, waiting time, and turnaround time for all
+processes.
 
 CODE:-
 #include <stdio.h>
@@ -229,6 +261,7 @@ This fixed amount of time is called as time quantum or time slice.
 After the time quantum expires, the running process is preempted and sent to the ready queue.
 Then, the processor is assigned to the next arrived process.
 It is always preemptive in nature.
+
 CODE:-
 #include <stdio.h>
 #include <stdlib.h>
@@ -344,6 +377,42 @@ Least Recently Used (LRU):
 It replaces the page that has not been used for the longest time.
 The algorithm keeps track of the order in which pages are used. When a replacement is needed, it chooses the page that was least recently used.
 It approximates the performance of the optimal algorithm and does not suffer from Belady's Anomaly. However, it requires extra overhead to track the order of usage.
+
+PSEUDOCODE—————————————————————————————————
+FIFO
+Initialize an empty queue
+For each page in the sequence:
+If the page is already in memory:
+Do nothing
+Else:
+If there is space in memory:
+Add the page to memory and enqueue it
+Else:
+Dequeue the oldest page and replace it with the new page
+Enqueue the new page
+TANISHKA GOEL CSE-B 35717702722 VIPS-TC
+LRU
+For each page in the sequence:
+If the page is already in memory:
+Update its usage time to current time
+Else:
+If there is space in memory:
+Load the page and update its usage time
+Else:
+Find the page with the oldest usage time (LRU)
+Replace it with the new page
+Update the new page's usage time to current time
+OPTIMAL
+For each page in the sequence:
+If the page is already in memory:
+Do nothing
+Else:
+If there is space in memory:
+Load the page into memory
+Else:
+Look ahead and find the page that will not be used for the longest time
+Replace that page with the new page
+
 FIRST IN FIRST OUT : -
 CODE:-
 #include <stdio.h>
@@ -689,6 +758,27 @@ All the other processes will remain in the waiting queue to be processed. Once t
 Preemptive Scheduling
 Preemptive Scheduling as opposed to non-preemptive scheduling will preempt (stop and store the currently executing process) the currently running process if a higher priority process enters the waiting state for execution and will execute the higher priority process first and then resume executing the previous process.
 
+ALGORITHM (handwritten):-
+Non-Preemptive Scheduling
+Steps:
+sort the Processes: Arrange the processes in a queue based on their priority (highest
+priority first). If two processes have the same priority, order them based on arrival time.
+Select Process: Pick the process at the front of the queue (the highest-priority process) for
+execution.
+Execute the Process: Execute the selected process until it completes.
+Remove the Process: After completion, remove the process from the queue.
+Repeat: Go back to Step 2 and repeat until all processes are completed.
+Preemptive Scheduling
+Steps:
+Sort the Processes: Keep the queue of processes sorted by priority.
+Monitor Arriving Processes: When a new process arrives, check its priority.
+◦ If the priority of the new process is higher than the currently executing process,
+preempt the current process.
+Assign CPU: Allocate the CPU to the process with the highest priority.
+Update Queue: If a process is preempted, add it back to the queue in its appropriate
+position based on priority.
+Repeat: Repeat steps 2-4 until all processes are complete.
+
 PREEMPTIVE PRIORITY SCHEDULING
 CODE:-
 #include <stdio.h>
@@ -910,6 +1000,23 @@ The best-fit algorithm searches for the smallest free partition that is large en
 
 Worst Fit Algorithm
 The worst-fit algorithm searches for the largest free partition and allocates the process to it. This algorithm is designed to leave the largest possible free partition for future use.
+
+ALGORITHM(handwritten):-
+First Fit Algorithm
+ Traverse the list of memory blocks.
+ For each block, check if it has enough space to accommodate the process.
+ If a block is found that fits, allocate it to the process.
+ If no suitable block is found, the process must wait.
+Best Fit Algorithm
+ Traverse the list of memory blocks.
+Find the smallest block that is large enough to accommodate the process.
+Allocate the process to this block.
+If no suitable block is found, the process must wait.
+Worst Fit Algorithm
+Traverse the list of memory blocks.
+Find the largest block that is large enough to accommodate the process.
+Allocate the process to this block.
+If no suitable block is found, the process must wait.
 
 CODE:-
 #include <stdio.h>
@@ -1308,6 +1415,38 @@ Max: A matrix where each row represents a process and each column represents the
 Allocation: A matrix that represents the number of resources of each type currently allocated to each process.
 Need: A matrix calculated by subtracting Allocation from Max for each process, representing the remaining resources each process will need to complete.
 
+PSEUDOCODE(handwritten):-
+// Banker's Algorithm
+Function BankersAlgorithm(Request, P[i]):
+if Request[i] > Need[i]:
+Raise error // Process exceeded maximum claim
+if Request[i] > Available:
+Wait // Not enough resources available
+// Pretend to allocate requested resources
+Available = Available - Request[i]
+Allocation[i] = Allocation[i] + Request[i]
+Need[i] = Need[i] - Request[i]
+if SafetyAlgorithm():
+Grant Request // Allocation was successful
+else:
+// Roll back allocation
+Available = Available + Request[i]
+Allocation[i] = Allocation[i] - Request[i]
+Need[i] = Need[i] + Request[i]
+Wait // The system would be unsafe
+// Safety Algorithm
+Function SafetyAlgorithm():
+Work = Available
+for each process i:
+Finish[i] = false
+while exists i such that Finish[i] == false and Need[i] <= Work:
+Work = Work + Allocation[i]
+Finish[i] = true
+if all Finish[i] == true:
+return true // System is in a safe state
+else:
+return false // System is in an unsafe state
+
 CODE:-
 #include <stdio.h>
 #define MAX 5
@@ -1418,6 +1557,37 @@ Direct (or Hashed) Access
 Direct, or hashed, access organizes records by computing their storage location using a hashing function, which maps a record’s key directly to a specific address in memory or on disk. This method allows for rapid retrieval, as it enables direct access to a record without reading intervening records, making it efficient for applications where records need to be accessed frequently or randomly. When a record is needed, the hashing function is applied to its key, quickly locating the exact storage location.
 Indexed File Organization
 Indexed file organization improves random access by using an index, similar to a book’s table of contents, which maintains pointers to the locations of records within the file. The index is typically built based on one or more key fields, and each entry in the index corresponds to a unique record in the file, containing both the key and the record’s address. This organization enables efficient access to records by allowing direct retrieval of the desired record through the index without reading the entire file. Indexed files support both sequential and random access, making them versatile for a variety of applications. They are particularly advantageous when there is a need to frequently search for, insert, or delete records.
+
+PSEUDOCODE(handwritten):-
+Sequential Access
+function sequentialAccess(filename, mode, record=None):
+open file filename in mode
+if mode is 'write':
+write record to end of file
+else if mode is 'read':
+while not end of file:
+read record from file
+process record
+close file
+Direct (or Hashed) Access
+function hashFunction(key):
+return key % tableSize
+function insertRecord(hashTable, record):
+index = hashFunction(record.key)
+if hashTable[index] is empty:
+hashTable[index] = record
+else:
+handle collision at index
+function retrieveRecord(hashTable, key):
+index = hashFunction(key)
+return hashTable[index] if hashTable[index].key == key else handle collision
+function deleteRecord(hashTable, key):
+index = hashFunction(key)
+if hashTable[index].key == key:
+remove hashTable[index]
+else:
+handle collision
+
 CODE:-
 #include <stdio.h>
 #include <stdlib.h>
